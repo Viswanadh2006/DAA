@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define STACK_SIZE 100
+
+typedef struct {
+    int n;
+    char from;
+    char to;
+    char aux;
+    int stage; 
+} Frame;
+
+typedef struct {
+    Frame items[STACK_SIZE];
+    int top;
+} Stack;
+
+void push(Stack *stack, Frame f) {
+    if (stack->top >= STACK_SIZE - 1) {
+        printf("Stack Overflow\n");
+        exit(1);
+    }
+    stack->items[++stack->top] = f;
+}
+
+Frame pop(Stack *stack) {
+    if (stack->top < 0) {
+        printf("Stack Underflow\n");
+        exit(1);
+    }
+    return stack->items[stack->top--];
+}
+
+int isEmpty(Stack *stack) {
+    return stack->top == -1;
+}
+
+void hanoiIterative(int n, char from, char to, char aux) {
+    Stack stack;
+    stack.top = -1;
+
+    Frame f = { n, from, to, aux, 0 };
+    push(&stack, f);
+
+    while (!isEmpty(&stack)) {
+        Frame current = pop(&stack);
+
+        if (current.n == 1) {
+            printf("Move disk 1 from %c to %c\n", current.from, current.to);
+            continue;
+        }
+
+        if (current.stage == 0) {
+            
+            current.stage = 1;
+            push(&stack, current);
+
+            Frame f1 = { current.n - 1, current.from, current.aux, current.to, 0 };
+            push(&stack, f1);
+        } else if (current.stage == 1) {
+             
+            printf("Move disk %d from %c to %c\n", current.n, current.from, current.to);
+
+            Frame f2 = { current.n - 1, current.aux, current.to, current.from, 0 };
+            push(&stack, f2);
+        }
+    }
+}
+
+int main() {
+    int n ;
+    printf("enter no of dicks:");
+    scanf("%d",&n);
+    hanoiIterative(n, 'A', 'C', 'B');
+    return 0;
+}
