@@ -57,3 +57,4 @@ int i = left, j = mid + 1, k = left;
         printf("%d ", a[i]);
     }
     return 0;
+}
